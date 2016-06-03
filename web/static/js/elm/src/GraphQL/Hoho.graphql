@@ -1,0 +1,16 @@
+mutation mutation {
+  createLink(input: {
+    clientMutationId: "1",
+    title: "GraphiQL",
+    url: "http://graphiql.org",
+  }){
+    linkEdge {
+      node {
+        id
+        url
+        title
+        createdAt
+      }
+    }
+  }
+}
