@@ -5,4 +5,4 @@ import Item.Types exposing (Model)
 
 initialModel : Model
 initialModel =
-    Model "" "" ""
+    Model "" "" "" ""
