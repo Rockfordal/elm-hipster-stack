@@ -1,13 +1,13 @@
 defmodule App.Query.Link do
   alias GraphQL.Type.List
-  import RethinkDB.Query, only: [table: 1]
-  alias RethinkDB.Query
+  import RethinkDB.Query, only: [table: 1, limit: 2, get: 2]
+
   def get do
     %{
       type: %List{ofType: App.Type.Link.get},
       resolve: fn (_, args, _) ->
         table("links")
-        |> Query.limit(args.first)
+        |> limit(args.first)
         |> DB.run
         |> DB.handle_graphql_resp
       end
@@ -16,7 +16,7 @@ defmodule App.Query.Link do
 
   def get_from_id(id) do
     table("links")
-    |> Query.get(id)
+    |> get(id)
     |> DB.run
     |> DB.handle_graphql_resp
   end
