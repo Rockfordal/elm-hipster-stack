@@ -2,7 +2,8 @@ module Item.Types exposing (..)
 
 
 type alias Model =
-    { title : String
+    { id : String
+    , title : String
     , url : String
     , createdAt : String
     }
