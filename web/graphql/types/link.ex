@@ -1,7 +1,7 @@
-
 defmodule App.Type.Link do
-  @type_string %{type: %GraphQL.Type.String{}}
   alias GraphQL.Type.ObjectType
+  @string %GraphQL.Type.String{}
+  @type_string %{type: @string}
 
   def get do
     %ObjectType{
@@ -11,7 +11,7 @@ defmodule App.Type.Link do
           title: @type_string,
           url: @type_string,
           createdAt: %{
-            type: %GraphQL.Type.String{},
+            type: @string,
             resolve: fn( obj, _args, _info) ->
               obj.timestamp
             end
