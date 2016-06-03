@@ -2,12 +2,11 @@ module Types exposing (..)
 
 import Item.Types
 import GraphQL.Ahead as Ahead exposing (QueryLinksResult)
-
+import GraphQL.Hoho as Hoho exposing (MutationResult)
 
 type alias Model =
     { items : List Item.Types.Model
     , item : Item.Types.Model
-    , newItem : Item.Types.Model
     , searchStr : String
     }
 
@@ -15,8 +14,9 @@ type alias Model =
 type Msg
     = NoOp
     | NewQuery (Maybe QueryLinksResult)
+    | Add (Maybe MutationResult)
+    | TryAdd
     | UpdateSearch String
-    | Add String
     | UpdateTitle String
     | UpdateUrl String
 

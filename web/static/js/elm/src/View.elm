@@ -70,7 +70,7 @@ view model =
                                     ++ "white-text"
                                 )
                             , type' "button"
-                            , onClick (Add "hej")
+                            , onClick (TryAdd)
                             ]
                             [ strong [] [ text "Add" ] ]
                         , a
