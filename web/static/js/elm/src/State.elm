@@ -35,20 +35,13 @@ edgeToItem edge =
         (Maybe.withDefault "Missing url"       edge.node.url)
         (Maybe.withDefault "Missing createdAt" edge.node.createdAt)
 
-defaultNewItem item =
+defaultItem item =
     Item.Types.Model
         (Maybe.withDefault "Missing id"        item.id)
         (Maybe.withDefault "Missing title"     item.title)
         (Maybe.withDefault "Missing url"       item.url)
         (Maybe.withDefault "Missing createdAt" item.createdAt)
 
-
-defaultDelItem item =
-    Item.Types.Model
-        (Maybe.withDefault "Missing id"        item.id)
-        (Maybe.withDefault "Missing title"     item.title)
-        (Maybe.withDefault "Missing url"       item.url)
-        (Maybe.withDefault "Missing createdAt" item.createdAt)
 
 getQuery sortString =
     Ahead.queryLinks { queryParam = sortString }
@@ -108,7 +101,7 @@ update msg model =
                               maybenewItem =
                                   toMaybeNewItem query
                               newItem =
-                                  (defaultNewItem maybenewItem)
+                                  (defaultItem maybenewItem)
                           in
                               { model
                                   | items = newItem :: model.items
@@ -128,7 +121,7 @@ update msg model =
                   Just query ->
                           let
                               maybedelItem = toMaybeDelItem query
-                              delItem = (defaultDelItem maybedelItem)
+                              delItem = (defaultItem maybedelItem)
                               id = delItem.id
                               -- logger = log "del id" id
                           in
