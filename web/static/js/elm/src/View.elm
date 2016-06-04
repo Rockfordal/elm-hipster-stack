@@ -30,17 +30,23 @@ view model =
                     [ text "Sortering" ]
                 , ul [ class "dropdown-content", id "dropdown1" ]
                     [ li []
-                        [ a [ href "#!"]
+                        [ a [ href "#!"
+                            , onClick (Sortby "title")
+                            ]
                             [ text "Titel" ]
                         ]
                     , li []
-                        [ a [ href "#!" ]
+                        [ a [ href "#!"
+                            , onClick (Sortby "url")
+                            ]
                             [ text "Url" ]
                         ]
                     , li [ class "divider" ]
                         []
                     , li []
-                        [ a [ href "#!" ]
+                        [ a [ href "#!"
+                            , onClick (Sortby "createdAt")
+                            ]
                             [ text "Datum" ]
                         ]
                     ]

@@ -9,19 +9,22 @@ type alias Model =
     { items : List Item.Types.Model
     , item : Item.Types.Model
     , searchStr : String
+    , sortby : String
+    , sortdir : String
     }
 
 
 type Msg
     = NoOp
-    | NewQuery (Maybe QueryLinksResult)
+    | Get (Maybe QueryLinksResult)
     | Add (Maybe MutationResult)
     | Del (Maybe DeleteLinkResult)
-    | TryDel (String)
     | TryAdd
+    | TryDel String
     | UpdateSearch String
     | UpdateTitle String
     | UpdateUrl String
+    | Sortby String
 
 
 type alias Edge =

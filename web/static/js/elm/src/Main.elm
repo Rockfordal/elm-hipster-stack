@@ -9,7 +9,7 @@ import View exposing (view)
 init : String -> ( Model, Cmd Msg )
 init sortString =
     ( initialModel
-    , getQuery sortString
+    , getQuery sortString initialModel.sortby initialModel.sortdir
     )
 
 

@@ -30,12 +30,14 @@ type alias QueryLinksResult =
     }
 
 
-queryLinks : { queryParam: String } -> Task Http.Error QueryLinksResult
+queryLinks : { queryParam: String, orderBy: String, orderDir: String } -> Task Http.Error QueryLinksResult
 queryLinks params =
-    let graphQLQuery = """query queryLinks($queryParam: String!) { store { linkConnection(query: $queryParam) { edges { node { id title url createdAt } } } } }""" in
+    let graphQLQuery = """query queryLinks($queryParam: String!, $orderBy: String!, $orderDir: String!) { store { linkConnection(query: $queryParam, order_by: $orderBy, order_dir: $orderDir) { edges { node { id title url createdAt } } } } }""" in
     let graphQLParams =
             Json.Encode.object
-                [ ("queryParam", Json.Encode.string params.queryParam)
+                [ ("queryParam", Json.Encode.string params.queryParam),
+                  ("orderBy",    Json.Encode.string params.orderBy),
+                  ("orderDir",   Json.Encode.string params.orderDir)
                 ]
     in
     GraphQL.query endpointUrl graphQLQuery "queryLinks" (encode 0 graphQLParams) queryLinksResult
@@ -47,7 +49,8 @@ queryLinksResult =
         (map (\linkConnection -> { linkConnection = linkConnection }) ("linkConnection" :=
         (map (\edges -> { edges = edges }) ("edges" :=
         (list (map (\node -> { node = node }) ("node" :=
-        (map (\id title url createdAt -> { id = id, title = title, url = url, createdAt = createdAt }) (maybe ("id" := string))
+        (map (\id title url createdAt -> { id = id, title = title, url = url, createdAt = createdAt })
+                (maybe ("id" := string))
         `apply` (maybe ("title" := string))
         `apply` (maybe ("url" := string))
         `apply` (maybe ("createdAt" := string)))))))))))

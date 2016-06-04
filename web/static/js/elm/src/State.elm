@@ -16,6 +16,8 @@ initialModel =
     { items = []
     , item = Item.State.initialModel
     , searchStr = ""
+    , sortby = "title"
+    , sortdir = "asc"
     }
 
 
@@ -39,10 +41,10 @@ edgeToItem edge =
     defaultItem edge.node
 
 
-getQuery sortString =
-    GetLinks.queryLinks { queryParam = sortString }
+getQuery searchString sortString dirString =
+    GetLinks.queryLinks { queryParam = searchString, orderBy = sortString, orderDir = dirString}
         |> Task.toMaybe
-        |> Task.perform (\_ -> NoOp) NewQuery
+        |> Task.perform (\_ -> NoOp) Get
 
 
 postQuery item =
@@ -66,7 +68,7 @@ update msg model =
             )
 
 
-        NewQuery maybeQuery ->
+        Get maybeQuery ->
             let
                 newItems =
                     case maybeQuery of
@@ -136,7 +138,7 @@ update msg model =
                     { model | searchStr = str }
             in
                 ( newModel
-                , getQuery str
+                , getQuery str model.sortby model.sortdir
                 )
 
 
@@ -183,3 +185,13 @@ update msg model =
                 ( newModel
                 , Cmd.none
                 )
+
+
+        Sortby str ->
+            let
+                newModel =
+                    { model | sortby = str}
+            in
+            ( newModel
+            , getQuery model.searchStr str model.sortdir
+            )
