@@ -80,7 +80,7 @@ view model =
                         ++ " white-text"
                     )
                 ]
-                [ text "Add new resource" ]
+                [ text "New Link" ]
 
         modal =
             div
@@ -90,7 +90,7 @@ view model =
                    [ Html.form []
                     [ div [ class "modal-content" ]
                         [ h5 []
-                            [ text "Add New Resource" ]
+                            [ text "New Link" ]
                         , div [ class "input-field" ]
                             [ input
                                 [ type' "text"
