@@ -38,7 +38,7 @@ viewNavbar =
                           [ text "Links" ]
                       ]
                   , li []
-                      [ a [ class "dropdown-button", attribute "data-activates" "dropdown1", href "#!" ]
+                      [ a [ class "dropdown-button", attribute "data-activates" "dropdown0", href "#!" ]
                           [ text "Admin"
                           , i [ class "material-icons right" ]
                               [ text "arrow_drop_down" ]
