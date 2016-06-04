@@ -7,11 +7,12 @@ import Types exposing (Model, Msg(..))
 import Item.View exposing (viewItems)
 import Json.Decode
 import Debug exposing (log)
-
+import Views.Navbar exposing (viewNavbar)
 
 view : Model -> Html Msg
 view model =
     let
+        navBar = viewNavbar
         searchField =
             div [ class "input-field" ]
                 [ input
@@ -21,7 +22,7 @@ view model =
                     ]
                     []
                 , label [ for "search" ]
-                    [ text "Search All Resources" ]
+                    [ text "Search Links" ]
                 ]
 
         orderBox =
@@ -136,12 +137,16 @@ view model =
                 ]
     in
         div []
-            [ searchField
-            , div [ class "row" ]
-                [ addButton
-                , orderBox
-                , dirBox
+            [ navBar
+            , div
+                [ class "container"]
+                [ searchField
+                , div [ class "row" ]
+                    [ addButton
+                    , orderBox
+                    , dirBox
+                    ]
+                , viewItems model.items
+                , modal
                 ]
-            , viewItems model.items
-            , modal
             ]
