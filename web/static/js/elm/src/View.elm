@@ -8,6 +8,7 @@ import Item.View exposing (viewItems)
 import Json.Decode
 import Debug exposing (log)
 import Views.Navbar exposing (viewNavbar)
+import Item.Views.AddModal exposing (addItemModal)
 
 diricon : String -> String
 diricon dir =
@@ -91,58 +92,7 @@ view model =
                     [ text "add" ]
                 ]
 
-        modal =
-            div
-                [ id "modal1"
-                , class "modal modal-fixed-footer"
-                ]
-                   [ Html.form []
-                    [ div [ class "modal-content" ]
-                        [ h5 []
-                            [ text "New Link" ]
-                        , div [ class "input-field" ]
-                            [ input
-                                [ type' "text"
-                                , id "newTitle"
-                                , onInput UpdateTitle
-                                , value model.item.title
-                                , autofocus True
-                                ]
-                                []
-                            , label [ for "newTitle" ]
-                                [ text "Title" ]
-                            ]
-                        , div [ class "input-field" ]
-                            [ input
-                                [ type' "text"
-                                , id "newUrl"
-                                , onInput UpdateUrl
-                                , value model.item.url
-                                ]
-                                []
-                            , label [ for "newUrl" ] [ text "Url" ]
-                            ]
-                        ]
-                    , div [ class "modal-footer" ]
-                        [ button
-                            [ class
-                                ("waves-effect waves-green btn-flat green darken-3 "
-                                    ++ "white-text"
-                                )
-                            , type' "button"
-                            , onClick (TryAdd)
-                            ]
-                            [ strong [] [ text "Add" ] ]
-                        , a
-                            [ class
-                                ("modal-action modal-close waves-effect waves-red "
-                                    ++ "btn-flat"
-                                )
-                            ]
-                            [ text "Cancel" ]
-                        ]
-                    ]
-                ]
+        modal = (addItemModal model.item)
     in
         div []
             [ navBar
