@@ -31,7 +31,9 @@ viewItem item =
                     [ href "#"
                     , onClick (TryDel item.id)
                     , deleteStyle ]
-                    [ text "Radera" ]
+                    [ i [ class "tiny material-icons"]
+                        [ text "delete"]
+                    ]
                 ]
             ]
         ]
