@@ -6,7 +6,7 @@ defmodule App.Mutations.Link do
   alias GraphQL.Relay.Mutation
   alias RethinkDB.Query
   @notnullstring %{type: %NonNull{ofType: %String{}}}
-  # require Logger
+  require Logger
 
 
   def create do
@@ -40,6 +40,53 @@ defmodule App.Mutations.Link do
           |> DB.handle_graphql_resp
       end
     })
+  end
+
+  def delete do
+    Mutation.new(%{
+          name: "DeleteLink",
+          input_fields: %{
+            id: @notnullstring,
+          },
+          output_fields: %{
+            linkEdge: %{
+              type: App.Type.LinkConnection.get[:edge_type],
+              resolve: fn (obj, args, _info) ->
+                Logger.debug "obj"
+                obj |> inspect |> Logger.debug
+                %{
+                  node: %{
+                    timestamp: "2016-01-02",
+                    id: obj[:id]
+                  },
+                  cursor: %{}
+                  # node: App.Query.Link.get_from_id(first(obj[:generated_keys])),
+                  # cursor: first(obj[:generated_keys])
+                }
+              end
+            },
+            store: App.Utils.getstore
+          },
+          mutate_and_get_payload: fn(input, _info) ->
+            id = input[:id]
+            deleted = Query.table("links")
+            |> Query.get(id)
+            |> Query.delete()
+            |> DB.run
+            |> Map.fetch(:data)
+            |> Tuple.to_list
+            |> List.last
+            |> Map.fetch("deleted")
+            |> Tuple.to_list
+            |> List.last
+            # |> DB.handle_graphql_resp
+            if deleted == 1 do
+              %{id: id}
+            else
+              %{}
+            end
+          end
+      })
   end
 
 end
