@@ -8,10 +8,11 @@ window.App = Elm.Main.embed(node);
 
 App.ports.closeModal.subscribe(function() {
   $('#modal1').closeModal();
+  $('#modal2').closeModal();
 });
 
-window.lol = $('.modal-trigger');
-window.asdf = $('#modal1');
+// window.lol = $('.modal-trigger');
+// window.asdf = $('#modal1');
 
 // Ugly hack, someone please improve :)
 setTimeout(() => {
@@ -27,4 +28,4 @@ setTimeout(() => {
         alignment: 'left' // Displays dropdown with edge aligned to the left of button
     });
 
-}, 100);
+}, 500);
