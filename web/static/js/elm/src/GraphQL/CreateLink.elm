@@ -1,4 +1,4 @@
-module GraphQL.Hoho exposing (mutation, MutationResult)
+module GraphQL.CreateLink exposing (mutation, MutationResult)
 
 import Task exposing (Task)
 import Json.Decode exposing (..)

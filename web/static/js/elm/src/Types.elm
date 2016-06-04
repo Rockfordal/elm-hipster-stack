@@ -1,8 +1,8 @@
 module Types exposing (..)
 
 import Item.Types
-import GraphQL.Ahead as Ahead exposing (QueryLinksResult)
-import GraphQL.Hoho as Hoho exposing (MutationResult)
+import GraphQL.GetLinks   as GetLinks exposing (QueryLinksResult)
+import GraphQL.CreateLink as CreateLink exposing (MutationResult)
 import GraphQL.DeleteLink as DeleteLink exposing (DeleteLinkResult)
 
 type alias Model =

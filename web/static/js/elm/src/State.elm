@@ -3,8 +3,8 @@ module State exposing (..)
 import Types exposing (Model, Msg(..))
 import Item.State
 import Item.Types
-import GraphQL.Ahead as Ahead exposing (QueryLinksResult)
-import GraphQL.Hoho as Hoho exposing (MutationResult)
+import GraphQL.GetLinks   as GetLinks   exposing (QueryLinksResult)
+import GraphQL.CreateLink as CreateLink exposing (MutationResult)
 import GraphQL.DeleteLink as DeleteLink exposing (DeleteLinkResult)
 import Ports exposing (closeModal)
 import Task
@@ -40,13 +40,13 @@ edgeToItem edge =
 
 
 getQuery sortString =
-    Ahead.queryLinks { queryParam = sortString }
+    GetLinks.queryLinks { queryParam = sortString }
         |> Task.toMaybe
         |> Task.perform (\_ -> NoOp) NewQuery
 
 
 postQuery item =
-    Hoho.mutation { title = item.title, url = item.url }
+    CreateLink.mutation { title = item.title, url = item.url }
         |> Task.toMaybe
         |> Task.perform (\_ -> NoOp) Add
 
