@@ -8,7 +8,6 @@ defmodule App.Mutations.Link do
   @notnullstring %{type: %NonNull{ofType: %String{}}}
   require Logger
 
-
   def create do
     Mutation.new(%{
       name: "CreateLink",

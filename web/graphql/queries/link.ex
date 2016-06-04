@@ -4,9 +4,16 @@ defmodule App.Query.Link do
   alias GraphQL.Type.NonNull
   alias GraphQL.Relay.Connection
   import RethinkDB.Lambda, only: [lambda: 1]
-  import RethinkDB.Query,  only: [table: 1, order_by: 2, asc: 1, desc: 1, filter: 2, match: 2]
+  import RethinkDB.Query,  only: [table: 1, order_by: 2, asc: 1, desc: 1, filter: 2, match: 2, get: 2]
   @type_string %{type: %GraphQL.Type.String{}}
   require Logger
+
+  def get_from_id(id) do
+    table("links")
+    |> get(id)
+    |> DB.run
+    |> DB.handle_graphql_resp
+  end
 
   def get_fields do
     %{
