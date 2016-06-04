@@ -25,6 +25,7 @@ type Msg
     | UpdateTitle String
     | UpdateUrl String
     | Sortby String
+    | Sortdir String
 
 
 type alias Edge =

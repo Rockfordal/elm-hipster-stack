@@ -187,11 +187,20 @@ update msg model =
                 )
 
 
-        Sortby str ->
+        Sortby sortby ->
             let
                 newModel =
-                    { model | sortby = str}
+                    { model | sortby = sortby }
             in
             ( newModel
-            , getQuery model.searchStr str model.sortdir
+            , getQuery model.searchStr sortby model.sortdir
+            )
+
+        Sortdir sortdir ->
+            let
+                newModel =
+                    { model | sortdir = sortdir }
+            in
+            ( newModel
+            , getQuery model.searchStr model.sortby sortdir
             )

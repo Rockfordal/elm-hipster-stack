@@ -25,7 +25,7 @@ view model =
                 ]
 
         orderBox =
-            div []
+            div [class "col"]
                 [ a [ class "dropdown-button btn", attribute "data-activates" "dropdown1", href "#" ]
                     [ text "Sortering" ]
                 , ul [ class "dropdown-content", id "dropdown1" ]
@@ -45,9 +45,29 @@ view model =
                         []
                     , li []
                         [ a [ href "#!"
-                            , onClick (Sortby "createdAt")
+                            , onClick (Sortby "timestamp")
                             ]
                             [ text "Datum" ]
+                        ]
+                    ]
+                ]
+
+        dirBox =
+            div [class "col"]
+                [ a [ class "dropdown-button btn", attribute "data-activates" "dropdown2", href "#" ]
+                    [ text "Riktning" ]
+                , ul [ class "dropdown-content", id "dropdown2" ]
+                    [ li []
+                        [ a [ href "#!"
+                            , onClick (Sortdir "asc")
+                            ]
+                            [ text "Asc" ]
+                        ]
+                    , li []
+                        [ a [ href "#!"
+                            , onClick (Sortdir "desc")
+                            ]
+                            [ text "Desc" ]
                         ]
                     ]
                 ]
@@ -120,6 +140,7 @@ view model =
             , div [ class "row" ]
                 [ addButton
                 , orderBox
+                , dirBox
                 ]
             , viewItems model.items
             , modal
