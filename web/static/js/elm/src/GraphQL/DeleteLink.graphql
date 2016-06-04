@@ -1,0 +1,11 @@
+mutation mutation {
+   deleteLink(input: {
+    id: "1",
+  }){
+    linkEdge {
+      node {
+        id
+        url
+        title
+        createdAt
+      } } } }

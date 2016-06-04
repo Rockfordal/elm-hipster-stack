@@ -2,6 +2,7 @@ module Item.View exposing (viewItems)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, style, href, target)
+import Html.Events exposing (onClick)
 import Item.Types exposing (Model)
 import Types exposing (Msg(..))
 import Regex
@@ -26,6 +27,11 @@ viewItem item =
                     , urlStyle
                     ]
                     [ text (urlPrettify item.url) ]
+                , a
+                    [ href "#"
+                    , onClick (TryDel item.id)
+                    , deleteStyle ]
+                    [ text "Radera" ]
                 ]
             ]
         ]
@@ -56,6 +62,15 @@ dateStyle =
         [ ( "color", "#888" )
         , ( "fontSize", "0.7em" )
         , ( "marginRight", "0.5em" )
+        ]
+
+
+deleteStyle : Attribute Msg
+deleteStyle =
+    style
+        [ ( "color", "#e00" )
+        , ( "fontSize", "0.8em" )
+        , ( "marginLeft", "0.8em" )
         ]
 
 

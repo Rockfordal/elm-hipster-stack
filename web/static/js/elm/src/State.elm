@@ -5,6 +5,7 @@ import Item.State
 import Item.Types
 import GraphQL.Ahead as Ahead exposing (QueryLinksResult)
 import GraphQL.Hoho as Hoho exposing (MutationResult)
+import GraphQL.DeleteLink as DeleteLink exposing (DeleteLinkResult)
 import Ports exposing (closeModal)
 import Task
 import Debug exposing (log)
@@ -24,6 +25,9 @@ toList queriedObject =
 toMaybeNewItem queriedObject =
     queriedObject.createLink.linkEdge.node
 
+toMaybeDelItem queriedObject =
+    queriedObject.deleteLink.linkEdge.node
+
 edgeToItem edge =
     Item.Types.Model
         (Maybe.withDefault "Missing id"        edge.node.id)
@@ -39,16 +43,29 @@ defaultNewItem item =
         (Maybe.withDefault "Missing createdAt" item.createdAt)
 
 
+defaultDelItem item =
+    Item.Types.Model
+        (Maybe.withDefault "Missing id"        item.id)
+        (Maybe.withDefault "Missing title"     item.title)
+        (Maybe.withDefault "Missing url"       item.url)
+        (Maybe.withDefault "Missing createdAt" item.createdAt)
+
 getQuery sortString =
     Ahead.queryLinks { queryParam = sortString }
         |> Task.toMaybe
         |> Task.perform (\_ -> NoOp) NewQuery
 
 
-putQuery item =
+postQuery item =
     Hoho.mutation { title = item.title, url = item.url }
         |> Task.toMaybe
         |> Task.perform (\_ -> NoOp) Add
+
+
+delQuery str =
+    DeleteLink.deleteLink { id = str }
+        |> Task.toMaybe
+        |> Task.perform (\_ -> NoOp) Del
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -105,6 +122,25 @@ update msg model =
                 )
 
 
+        Del maybeQuery ->
+            let newModel =
+              case maybeQuery of
+                  Just query ->
+                          let
+                              maybedelItem = toMaybeDelItem query
+                              delItem = (defaultDelItem maybedelItem)
+                              id = delItem.id
+                              -- logger = log "del id" id
+                          in
+                              { model | items = List.filter (\t -> t.id /= id) model.items }
+                  Nothing ->
+                          model
+            in
+                ( newModel
+                , Cmd.none
+                )
+
+
         UpdateSearch str ->
             let
                 newModel =
@@ -117,7 +153,13 @@ update msg model =
 
         TryAdd ->
             ( model
-            , putQuery model.item
+            , postQuery model.item
+            )
+
+
+        TryDel str ->
+            ( model
+            , delQuery str
             )
 
 
