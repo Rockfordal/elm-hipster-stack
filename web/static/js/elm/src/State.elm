@@ -28,19 +28,15 @@ toMaybeNewItem queriedObject =
 toMaybeDelItem queriedObject =
     queriedObject.deleteLink.linkEdge.node
 
-edgeToItem edge =
-    Item.Types.Model
-        (Maybe.withDefault "Missing id"        edge.node.id)
-        (Maybe.withDefault "Missing title"     edge.node.title)
-        (Maybe.withDefault "Missing url"       edge.node.url)
-        (Maybe.withDefault "Missing createdAt" edge.node.createdAt)
-
 defaultItem item =
     Item.Types.Model
         (Maybe.withDefault "Missing id"        item.id)
         (Maybe.withDefault "Missing title"     item.title)
         (Maybe.withDefault "Missing url"       item.url)
         (Maybe.withDefault "Missing createdAt" item.createdAt)
+
+edgeToItem edge =
+    defaultItem edge.node
 
 
 getQuery sortString =
