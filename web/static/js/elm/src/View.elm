@@ -9,6 +9,18 @@ import Json.Decode
 import Debug exposing (log)
 import Views.Navbar exposing (viewNavbar)
 
+diricon : String -> String
+diricon dir =
+    case dir of
+        "asc" -> "trending_up"
+        _     -> "trending_down"
+
+invertdir : String -> String
+invertdir dir =
+    case dir of
+        "asc" -> "desc"
+        _     -> "asc"
+
 view : Model -> Html Msg
 view model =
     let
@@ -22,13 +34,16 @@ view model =
                     ]
                     []
                 , label [ for "search" ]
-                    [ text "Search Links" ]
+                    [ text "Search" ]
                 ]
 
         orderBox =
             div [class "col"]
-                [ a [ class "dropdown-button btn", attribute "data-activates" "dropdown1", href "#" ]
-                    [ text "Sortering" ]
+                [ a [ class "dropdown-button btn-flat", attribute "data-activates" "dropdown1", href "#" ]
+                    [ text "Sort by"
+                    , i [ class "material-icons right" ]
+                        [ text "arrow_drop_down" ]
+                    ]
                 , ul [ class "dropdown-content", id "dropdown1" ]
                     [ li []
                         [ a [ href "#!"
@@ -53,35 +68,28 @@ view model =
                     ]
                 ]
 
-        dirBox =
+        dirBox dir =
             div [class "col"]
-                [ a [ class "dropdown-button btn", attribute "data-activates" "dropdown2", href "#" ]
-                    [ text "Riktning" ]
-                , ul [ class "dropdown-content", id "dropdown2" ]
-                    [ li []
-                        [ a [ href "#!"
-                            , onClick (Sortdir "asc")
-                            ]
-                            [ text "Asc" ]
-                        ]
-                    , li []
-                        [ a [ href "#!"
-                            , onClick (Sortdir "desc")
-                            ]
-                            [ text "Desc" ]
-                        ]
-                    ]
+                [ a [ href "#!"]
+                  [ i [ class "material-icons"
+                      , onClick (Sortdir (invertdir dir))
+                      ]
+                      [ text (diricon dir)
+                      ]
+                  ]
                 ]
 
         addButton =
             a
                 [ href "#modal1"
                 , class
-                    ("waves-effect waves-light btn modal-trigger right light-blue"
-                        ++ " white-text"
+                    ("btn-floating waves-effect waves-light modal-trigger grey right"
                     )
                 ]
-                [ text "New Link" ]
+                -- [ text "New Link" ]
+                [ i [ class "material-icons" ]
+                    [ text "add" ]
+                ]
 
         modal =
             div
@@ -144,7 +152,7 @@ view model =
                 , div [ class "row" ]
                     [ addButton
                     , orderBox
-                    , dirBox
+                    , dirBox model.sortdir
                     ]
                 , viewItems model.items
                 , modal

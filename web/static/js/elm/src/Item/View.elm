@@ -34,6 +34,13 @@ viewItem item =
                     [ i [ class "tiny material-icons"]
                         [ text "delete"]
                     ]
+                , a
+                    [ href "#"
+                    -- , onClick (TryDel item.id)
+                    , deleteStyle ]
+                    [ i [ class "tiny material-icons orange-text"]
+                        [ text "mode_edit"]
+                    ]
                 ]
             ]
         ]
