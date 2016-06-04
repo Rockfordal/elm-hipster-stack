@@ -47,6 +47,7 @@ view model =
                                 [ type' "text"
                                 , id "newTitle"
                                 , onInput UpdateTitle
+                                , value model.item.title
                                 , autofocus True
                                 ]
                                 []
@@ -58,6 +59,7 @@ view model =
                                 [ type' "text"
                                 , id "newUrl"
                                 , onInput UpdateUrl
+                                , value model.item.url
                                 ]
                                 []
                             , label [ for "newUrl" ] [ text "Url" ]

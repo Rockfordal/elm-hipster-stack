@@ -101,7 +101,7 @@ update msg model =
                           in
                               { model
                                   | items = newItem :: model.items
-                              , item = initialModel.item
+                                  , item = initialModel.item
                               }
                       Nothing ->
                               model
