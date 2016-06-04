@@ -6,7 +6,6 @@ var node = document.getElementById("elm-land");
 
 window.App = Elm.Main.embed(node);
 
-
 App.ports.closeModal.subscribe(function() {
   $('#modal1').closeModal();
 });
@@ -15,4 +14,17 @@ window.lol = $('.modal-trigger');
 window.asdf = $('#modal1');
 
 // Ugly hack, someone please improve :)
-setTimeout(() => { $('.modal-trigger').leanModal(); }, 100);
+setTimeout(() => {
+    $('.modal-trigger').leanModal();
+
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        // hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    });
+
+}, 100);

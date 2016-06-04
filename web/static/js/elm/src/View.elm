@@ -23,6 +23,29 @@ view model =
                 , label [ for "search" ]
                     [ text "Search All Resources" ]
                 ]
+
+        orderBox =
+            div []
+                [ a [ class "dropdown-button btn", attribute "data-activates" "dropdown1", href "#" ]
+                    [ text "Sortering" ]
+                , ul [ class "dropdown-content", id "dropdown1" ]
+                    [ li []
+                        [ a [ href "#!"]
+                            [ text "Titel" ]
+                        ]
+                    , li []
+                        [ a [ href "#!" ]
+                            [ text "Url" ]
+                        ]
+                    , li [ class "divider" ]
+                        []
+                    , li []
+                        [ a [ href "#!" ]
+                            [ text "Datum" ]
+                        ]
+                    ]
+                ]
+
         addButton =
             a
                 [ href "#modal1"
@@ -89,7 +112,9 @@ view model =
         div []
             [ searchField
             , div [ class "row" ]
-                [ addButton ]
+                [ addButton
+                , orderBox
+                ]
             , viewItems model.items
             , modal
             ]
