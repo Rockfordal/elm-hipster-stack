@@ -4,15 +4,18 @@ defmodule App.Utils do
   @store %{ id: 1}
 
 
-  def store do
-    @store
+  def getstore do
+    %{type: App.Type.Store.get,
+      resolve: fn (obj, _args, _info) ->
+        @store
+      end
+    }
   end
 
   def store_field do
-    %{
-      type: App.Type.Store.get,
+    %{type: App.Type.Store.get,
       resolve: fn (doc, _args, _) ->
-        store
+        @store
       end
     }
   end
