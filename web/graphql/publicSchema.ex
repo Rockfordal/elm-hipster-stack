@@ -1,8 +1,6 @@
 defmodule App.PublicSchema do
-
   alias GraphQL.Schema
   alias GraphQL.Type.ObjectType
-
 
   def schema do
     %Schema{

@@ -1,6 +1,5 @@
 defmodule App.Utils do
   alias GraphQL.Relay.Node
-
   @store %{ id: 1}
 
 
