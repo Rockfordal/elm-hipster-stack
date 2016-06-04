@@ -26,6 +26,8 @@ type Msg
     | UpdateUrl String
     | Sortby String
     | Sortdir String
+    | SetItem Item.Types.Model
+    | ClearItem
 
 
 type alias Edge =

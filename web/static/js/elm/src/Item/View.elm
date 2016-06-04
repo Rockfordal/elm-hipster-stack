@@ -7,7 +7,6 @@ import Item.Types exposing (Model)
 import Types exposing (Msg(..))
 import Regex
 
-
 viewItem : Model -> Html Msg
 viewItem item =
     li
@@ -35,9 +34,11 @@ viewItem item =
                         [ text "delete"]
                     ]
                 , a
-                    [ href "#"
-                    -- , onClick (TryDel item.id)
-                    , deleteStyle ]
+                    [ href "#modal2"
+                    , class "modal-trigger"
+                    , onClick (SetItem item)
+                    , deleteStyle
+                    ]
                     [ i [ class "tiny material-icons orange-text"]
                         [ text "mode_edit"]
                     ]

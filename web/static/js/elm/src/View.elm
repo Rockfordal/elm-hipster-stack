@@ -9,6 +9,7 @@ import Json.Decode
 import Debug exposing (log)
 import Views.Navbar exposing (viewNavbar)
 import Item.Views.AddModal exposing (addItemModal)
+import Item.Views.EditModal exposing (editItemModal)
 
 diricon : String -> String
 diricon dir =
@@ -84,15 +85,14 @@ view model =
             a
                 [ href "#modal1"
                 , class
-                    ("btn-floating waves-effect waves-light modal-trigger grey right"
-                    )
+                    ("btn-floating waves-effect waves-light modal-trigger grey right")
+
+                , onClick (ClearItem)
                 ]
-                -- [ text "New Link" ]
                 [ i [ class "material-icons" ]
                     [ text "add" ]
                 ]
 
-        modal = (addItemModal model.item)
     in
         div []
             [ navBar
@@ -105,6 +105,7 @@ view model =
                     , dirBox model.sortdir
                     ]
                 , viewItems model.items
-                , modal
+                , addItemModal model.item
+                , editItemModal model.item
                 ]
             ]

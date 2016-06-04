@@ -204,3 +204,21 @@ update msg model =
             ( newModel
             , getQuery model.searchStr model.sortby sortdir
             )
+
+        SetItem item ->
+            let
+                newModel =
+                    { model | item = item }
+            in
+            ( newModel
+            , Cmd.none
+            )
+
+        ClearItem ->
+            let
+                newModel =
+                    { model | item = Item.State.initialModel }
+            in
+            ( newModel
+            , Cmd.none
+            )
