@@ -13,27 +13,31 @@ import Hop.Types exposing (Config, Query, Location, PathMatcher, Router)
 --     , searchStr : String
 --     , sortby : String
 --     , sortdir : String
---     }
 
 type alias Model =
     { location : Location
     , route : Route
+    , items : List Item.Types.Model
+    , item : Item.Types.Model
+    , searchStr : String
+    , sortby : String
+    , sortdir : String
     }
 
 type Msg
     = NoOp
-    -- | Get (Maybe QueryLinksResult)
-    -- | Add (Maybe MutationResult)
-    -- | Del (Maybe DeleteLinkResult)
-    -- | TryAdd
-    -- | TryDel String
-    -- | UpdateSearch String
-    -- | UpdateTitle String
-    -- | UpdateUrl String
-    -- | Sortby String
-    -- | Sortdir String
-    -- | SetItem Item.Types.Model
-    -- | ClearItem
+    | Get (Maybe QueryLinksResult)
+    | Add (Maybe MutationResult)
+    | Del (Maybe DeleteLinkResult)
+    | TryAdd
+    | TryDel String
+    | UpdateSearch String
+    | UpdateTitle String
+    | UpdateUrl String
+    | Sortby String
+    | Sortdir String
+    | SetItem Item.Types.Model
+    | ClearItem
     | NavigateTo String
     | SetQuery Query
 

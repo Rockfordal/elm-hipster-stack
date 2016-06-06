@@ -9,6 +9,7 @@ import Hop exposing (makeUrl, makeUrlFromLocation, matchUrl, setQuery)
 import Hop.Types exposing (Config, Query, Location, PathMatcher, Router)
 import Hop.Matchers exposing (..)
 import MyRouter exposing (matchers, routerConfig)
+import Item.State
 
 -- init : String -> ( Model, Cmd Msg )
 -- init sortString =
@@ -16,9 +17,14 @@ import MyRouter exposing (matchers, routerConfig)
 --     , getQuery sortString initialModel.sortby initialModel.sortdir
 --     )
 
+emptyItem = Item.State.initialModel
+
 init : ( Route, Hop.Types.Location ) -> ( Model, Cmd Msg )
 init ( route, location ) =
-    ( Model location route, Cmd.none )
+    ( Model location route [] emptyItem "" "" ""
+    , getQuery "" "title" "asc"
+    -- , getQuery sortString initialModel.sortby initialModel.sortdir
+    )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -45,11 +51,6 @@ main =
         , view = view
         }
 
--- main : Program Never
--- main =
 --     Html.App.program
 --         { init = init ""
---         , update = update
 --         , subscriptions = subscriptions
---         , view = view
---         }

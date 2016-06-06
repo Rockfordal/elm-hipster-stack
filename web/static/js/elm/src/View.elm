@@ -9,7 +9,7 @@ import Json.Decode
 import Debug exposing (log)
 import Views.Navbar exposing (viewNavbar)
 import Item.Views.AddModal exposing (addItemModal)
-import Item.Views.EditModal exposing (editItemModal)
+-- import Item.Views.EditModal exposing (editItemModal)
 
 
 diricon : String -> String
@@ -29,13 +29,12 @@ invertdir dir =
 linksView : Model -> Html Msg
 linksView model =
     let
---         navBar = viewNavbar
         searchField =
             div [ class "input-field" ]
                 [ input
                     [ type' "text"
                     , id "search"
-                    -- , onInput UpdateSearch
+                    , onInput UpdateSearch
                     ]
                     []
                 , label [ for "search" ]
@@ -51,14 +50,14 @@ linksView model =
                     ]
                 , ul [ class "dropdown-content", id "dropdown1" ]
                     [ li []
-                        [ a [ href "#!"
-                            -- , onClick (Sortby "title")
+                        [ a [ href "#"
+                            , onClick (Sortby "title")
                             ]
                             [ text "Titel" ]
                         ]
                     , li []
                         [ a [ href "#!"
-                            -- , onClick (Sortby "url")
+                            , onClick (Sortby "url")
                             ]
                             [ text "Url" ]
                         ]
@@ -66,7 +65,7 @@ linksView model =
                         []
                     , li []
                         [ a [ href "#!"
-                            -- , onClick (Sortby "timestamp")
+                            , onClick (Sortby "timestamp")
                             ]
                             [ text "Datum" ]
                         ]
@@ -97,19 +96,19 @@ linksView model =
 
     in
         div []
-            [
-             -- navBar
-              div
+            [ div
                 [ class "container"]
                 [
                  searchField
                 , div [ class "row" ]
                     [ addButton
                     , orderBox
-                    -- , dirBox model.sortdir
+                    , button [ onClick (Sortdir (invertdir model.sortdir))]
+                             [ text "klicka" ]
+                    , dirBox model.sortdir
                     ]
---                 , viewItems model.items
---                 , addItemModal model.item
+                , viewItems model.items
+                , addItemModal model.item
 --                 , editItemModal model.item
                 ]
             ]
@@ -139,4 +138,3 @@ view model =
         [ viewNavbar model
         , pageView model
         ]
-

@@ -12,17 +12,21 @@ import Debug exposing (log)
 import MyRouter exposing (..)
 import Hop exposing (makeUrl, makeUrlFromLocation, matchUrl, setQuery)
 import Navigation
+import Dict
 
 
 -- initialModel : Model
 -- initialModel =
---     { items = []
+--     -- merge
+--     -- ( Model location route
+--     { location = { path = [""], query = ""}
+--     , route =  Types.MainRoute
+--     , items = []
 --     , item = Item.State.initialModel
 --     , searchStr = ""
 --     , sortby = "title"
 --     , sortdir = "asc"
 --     }
-
 
 toList queriedObject =
     queriedObject.store.linkConnection.edges
@@ -44,29 +48,29 @@ edgeToItem edge =
     defaultItem edge.node
 
 
--- getQuery searchString sortString dirString =
---     GetLinks.queryLinks { queryParam = searchString, orderBy = sortString, orderDir = dirString}
---         |> Task.toMaybe
---         |> Task.perform (\_ -> NoOp) Get
+getQuery searchString sortString dirString =
+    GetLinks.queryLinks { queryParam = searchString, orderBy = sortString, orderDir = dirString}
+        |> Task.toMaybe
+        |> Task.perform (\_ -> NoOp) Get
 
 
--- postQuery item =
---     CreateLink.mutation { title = item.title, url = item.url }
---         |> Task.toMaybe
---         |> Task.perform (\_ -> NoOp) Add
+postQuery item =
+    CreateLink.mutation { title = item.title, url = item.url }
+        |> Task.toMaybe
+        |> Task.perform (\_ -> NoOp) Add
 
 
--- delQuery str =
---     DeleteLink.deleteLink { id = str }
---         |> Task.toMaybe
---         |> Task.perform (\_ -> NoOp) Del
+delQuery str =
+    DeleteLink.deleteLink { id = str }
+        |> Task.toMaybe
+        |> Task.perform (\_ -> NoOp) Del
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
 
   -- case (Debug.log "msg" msg) of
-    case msg of
+  case msg of
         NavigateTo path ->
             let
                 command =
@@ -98,157 +102,159 @@ update msg model =
             )
 
 
-        -- Get maybeQuery ->
-        --     let
-        --         newItems =
-        --             case maybeQuery of
-        --                 Just query ->
-        --                     let
-        --                         list =
-        --                             toList query
-        --                     in
-        --                         List.map edgeToItem list
+        Get maybeQuery ->
+            let
+                -- loggy = log "get" "Nu fick vi"
+                newItems =
+                    case maybeQuery of
+                        Just query ->
+                            let
+                                list =
+                                    toList query
+                            in
+                                List.map edgeToItem list
 
-        --                 Nothing ->
-        --                     []
+                        Nothing ->
+                            []
 
-        --         newModel =
-        --             { model | items = newItems }
-        --     in
-        --         ( newModel
-        --         , Cmd.none
-        --         )
-
-
-        -- Add maybeQuery ->
-        --     let
-        --         newModel =
-        --           case maybeQuery of
-        --               Just query ->
-        --                   let
-        --                       maybenewItem =
-        --                           toMaybeNewItem query
-        --                       newItem =
-        --                           (defaultItem maybenewItem)
-        --                   in
-        --                       { model
-        --                           | items = newItem :: model.items
-        --                           -- , item = initialModel.item
-        --                       }
-        --               Nothing ->
-        --                       model
-        --     in
-        --         ( newModel
-        --         , closeModal ()
-        --         )
+                newModel =
+                    { model | items = newItems }
+            in
+                ( newModel
+                , Cmd.none
+                )
 
 
-        -- Del maybeQuery ->
-        --     let newModel =
-        --       case maybeQuery of
-        --           Just query ->
-        --                   let
-        --                       maybedelItem = toMaybeDelItem query
-        --                       delItem = (defaultItem maybedelItem)
-        --                       id = delItem.id
-        --                       -- logger = log "del id" id
-        --                   in
-        --                       { model | items = List.filter (\t -> t.id /= id) model.items }
-        --           Nothing ->
-        --                   model
-        --     in
-        --         ( newModel
-        --         , Cmd.none
-        --         )
+        Add maybeQuery ->
+            let
+                newModel =
+                  case maybeQuery of
+                      Just query ->
+                          let
+                              maybenewItem =
+                                  toMaybeNewItem query
+                              newItem =
+                                  (defaultItem maybenewItem)
+                          in
+                              { model
+                                  | items = newItem :: model.items
+                                  -- , item = initialModel.item
+                              }
+                      Nothing ->
+                              model
+            in
+                ( newModel
+                , closeModal ()
+                )
 
 
-        -- UpdateSearch str ->
-        --     let
-        --         newModel =
-        --             { model | searchStr = str }
-        --     in
-        --         ( newModel
-        --         , getQuery str model.sortby model.sortdir
-        --         )
+        Del maybeQuery ->
+            let newModel =
+              case maybeQuery of
+                  Just query ->
+                          let
+                              maybedelItem = toMaybeDelItem query
+                              delItem = (defaultItem maybedelItem)
+                              id = delItem.id
+                              -- logger = log "del id" id
+                          in
+                              { model | items = List.filter (\t -> t.id /= id) model.items }
+                  Nothing ->
+                          model
+            in
+                ( newModel
+                , Cmd.none
+                )
 
 
-        -- TryAdd ->
-        --     ( model
-        --     , postQuery model.item
-        --     )
+        UpdateSearch str ->
+            let
+                newModel =
+                    { model | searchStr = str }
+            in
+                ( newModel
+                , getQuery str model.sortby model.sortdir
+                )
 
 
-        -- TryDel str ->
-        --     ( model
-        --     , delQuery str
-        --     )
+        TryAdd ->
+            ( model
+            , postQuery model.item
+            )
 
 
-        -- UpdateTitle str ->
-        --     let
-        --         item =
-        --             model.item
-
-        --         updatedItem =
-        --             { item | title = str }
-
-        --         newModel =
-        --             { model | item = updatedItem }
-
-        --     in
-        --         ( newModel
-        --         , Cmd.none
-        --         )
+        TryDel str ->
+            ( model
+            , delQuery str
+            )
 
 
-        -- UpdateUrl str ->
-        --     let
-        --         item =
-        --             model.item
+        UpdateTitle str ->
+            let
+                item =
+                    model.item
 
-        --         updatedItem =
-        --             { item | url = str }
+                updatedItem =
+                    { item | title = str }
 
-        --         newModel =
-        --             { model | item = updatedItem }
-        --     in
-        --         ( newModel
-        --         , Cmd.none
-        --         )
+                newModel =
+                    { model | item = updatedItem }
+
+            in
+                ( newModel
+                , Cmd.none
+                )
 
 
-        -- Sortby sortby ->
-        --     let
-        --         newModel =
-        --             { model | sortby = sortby }
-        --     in
-        --     ( newModel
-        --     , getQuery model.searchStr sortby model.sortdir
-        --     )
+        UpdateUrl str ->
+            let
+                item =
+                    model.item
 
-        -- Sortdir sortdir ->
-        --     let
-        --         newModel =
-        --             { model | sortdir = sortdir }
-        --     in
-        --     ( newModel
-        --     , getQuery model.searchStr model.sortby sortdir
-        --     )
+                updatedItem =
+                    { item | url = str }
 
-        -- SetItem item ->
-        --     let
-        --         newModel =
-        --             { model | item = item }
-        --     in
-        --     ( newModel
-        --     , Cmd.none
-        --     )
+                newModel =
+                    { model | item = updatedItem }
+            in
+                ( newModel
+                , Cmd.none
+                )
 
-        -- ClearItem ->
-        --     let
-        --         newModel =
-        --             { model | item = Item.State.initialModel }
-        --     in
-        --     ( newModel
-        --     , Cmd.none
-        --     )
+
+        Sortby sortby ->
+            let
+                newModel =
+                    { model | sortby = sortby }
+            in
+            ( newModel
+            , getQuery model.searchStr sortby model.sortdir
+            )
+
+        Sortdir sortdir ->
+            let
+                loggy = log "sortdir" model.sortdir
+                newModel =
+                    { model | sortdir = sortdir }
+            in
+            ( newModel
+            , getQuery model.searchStr model.sortby sortdir
+            )
+
+        SetItem item ->
+            let
+                newModel =
+                    { model | item = item }
+            in
+            ( newModel
+            , Cmd.none
+            )
+
+        ClearItem ->
+            let
+                newModel =
+                    { model | item = Item.State.initialModel }
+            in
+            ( newModel
+            , Cmd.none
+            )
