@@ -44,6 +44,8 @@ defmodule App.Query.Link do
       type: App.Type.LinkConnection.get[:connection_type],
       args: Map.merge(Connection.args, get_fields),
       resolve: fn (obj, args , _ctx) ->
+        # obj  |> logga
+        # args |> logga
 
         search = if Map.has_key?(args, :query) do
           args[:query]
@@ -51,7 +53,8 @@ defmodule App.Query.Link do
           ""
         end
 
-        myid = if Map.has_key?(obj, :id) do
+        myid = if Map.has_key?(obj, :id) and Map.has_key?(obj, :name) do
+          "hittat namn" |> logga
           if String.valid?(obj[:id]) do
             obj[:id]
           else
@@ -69,7 +72,7 @@ defmodule App.Query.Link do
 
         |> filter(lambda fn (link) ->
           if myid == "" do
-            match(link[:project], link[:project])
+            match("", "")
           else
             match(link[:project], myid)
           end
