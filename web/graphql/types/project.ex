@@ -9,6 +9,7 @@ defmodule App.Type.Project do
         fields: %{
           id: @type_string,
           name: @type_string,
+          links: App.Query.Link.get,
           createdAt: %{
             type: @string,
             resolve: fn( obj, _args, _info) ->

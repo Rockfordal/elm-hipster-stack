@@ -26,7 +26,7 @@ defmodule App.Query.Project do
   def get_order args do
     odir   = args[:order_dir]
     ofield = args[:order_by]
-    order =
+    order  =
       case odir do
         "asc" -> asc(ofield)
         _     -> desc(ofield)

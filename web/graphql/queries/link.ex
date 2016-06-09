@@ -8,6 +8,12 @@ defmodule App.Query.Link do
   @type_string %{type: %GraphQL.Type.String{}}
   require Logger
 
+  def logga msg do
+    msg
+    |> inspect
+    |> Logger.debug
+  end
+
   def get_from_id(id) do
     table("links")
     |> get(id)
@@ -24,9 +30,9 @@ defmodule App.Query.Link do
   end
 
   def get_order args do
-    odir = args[:order_dir]
+    odir   = args[:order_dir]
     ofield = args[:order_by]
-    order =
+    order  =
       case odir do
         "asc" -> asc(ofield)
         _     -> desc(ofield)
@@ -37,13 +43,38 @@ defmodule App.Query.Link do
     %{
       type: App.Type.LinkConnection.get[:connection_type],
       args: Map.merge(Connection.args, get_fields),
-      resolve: fn ( _, args , _ctx) ->
+      resolve: fn (obj, args , _ctx) ->
+
+        search = if Map.has_key?(args, :query) do
+          args[:query]
+        else
+          ""
+        end
+
+        myid = if Map.has_key?(obj, :id) do
+          if String.valid?(obj[:id]) do
+            obj[:id]
+          else
+            ""
+          end
+        else
+          ""
+        end
+
         table("links")
-        |> filter(lambda fn(link) ->
-          match(
-            link[:title],
-            args[:query])
-          end)
+
+        |> filter(lambda fn (link) ->
+          match(link[:title], search)
+        end)
+
+        |> filter(lambda fn (link) ->
+          if myid == "" do
+            match(link[:project], link[:project])
+          else
+            match(link[:project], myid)
+          end
+        end)
+
         |> order_by(get_order args)
         |> DB.run
         |> DB.handle_graphql_resp
