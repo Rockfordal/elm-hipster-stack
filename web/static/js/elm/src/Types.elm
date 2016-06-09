@@ -1,33 +1,50 @@
 module Types exposing (..)
 
 import Item.Types
-import GraphQL.GetLinks   as GetLinks exposing (QueryLinksResult)
+import GraphQL.GetLinks   as GetLinks   exposing (QueryLinksResult)
 import GraphQL.CreateLink as CreateLink exposing (MutationResult)
 import GraphQL.DeleteLink as DeleteLink exposing (DeleteLinkResult)
+import Routes exposing (Sitemap(..))
+
+
+-- type alias Model =
+--     { items : List Item.Types.Model
+--     , item : Item.Types.Model
+--     , searchStr : String
+--     , sortby : String
+--     , sortdir : String
+--     }
+
 
 type alias Model =
-    { items : List Item.Types.Model
-    , item : Item.Types.Model
-    , searchStr : String
-    , sortby : String
-    , sortdir : String
+    { route : Sitemap
+    , ready : Bool
+    -- , posts : List Post
+    -- , post : Maybe Post
+    , error : Maybe String
     }
 
 
 type Msg
-    = NoOp
-    | Get (Maybe QueryLinksResult)
-    | Add (Maybe MutationResult)
-    | Del (Maybe DeleteLinkResult)
-    | TryAdd
-    | TryDel String
-    | UpdateSearch String
-    | UpdateTitle String
-    | UpdateUrl String
-    | Sortby String
-    | Sortdir String
-    | SetItem Item.Types.Model
-    | ClearItem
+    = RouteTo Sitemap
+    -- | FetchError Http.Error
+    -- | FetchSuccess (List Post)
+
+
+-- type Msg
+--     = NoOp
+--     | Get (Maybe QueryLinksResult)
+--     | Add (Maybe MutationResult)
+--     | Del (Maybe DeleteLinkResult)
+--     | TryAdd
+--     | TryDel String
+--     | UpdateSearch String
+--     | UpdateTitle String
+--     | UpdateUrl String
+--     | Sortby String
+--     | Sortdir String
+--     | SetItem Item.Types.Model
+--     | ClearItem
 
 
 type alias Edge =
