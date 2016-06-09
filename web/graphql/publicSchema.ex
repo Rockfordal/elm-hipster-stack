@@ -9,7 +9,7 @@ defmodule App.PublicSchema do
       query: %ObjectType{
         name: "Query",
         fields: %{
-          node: Utils.node_field,
+          node:  Utils.node_field,
           store: Utils.store_field
         }
       },
