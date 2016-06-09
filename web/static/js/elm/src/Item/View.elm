@@ -28,7 +28,7 @@ viewItem item =
                     [ text (urlPrettify item.url) ]
                 , a
                     [ href "#"
-                    , onClick (TryDel item.id)
+                    -- , onClick (TryDel item.id)
                     , deleteStyle ]
                     [ i [ class "tiny material-icons"]
                         [ text "delete"]
@@ -36,7 +36,7 @@ viewItem item =
                 , a
                     [ href "#modal2"
                     , class "modal-trigger"
-                    , onClick (SetItem item)
+                    -- , onClick (SetItem item)
                     , deleteStyle
                     ]
                     [ i [ class "tiny material-icons orange-text"]

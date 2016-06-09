@@ -13,105 +13,120 @@ import Navigation exposing (Location)
 import Routes exposing (Sitemap(..))
 
 
--- initialModel : Model
--- initialModel =
---     , item = Item.State.initialModel
---     , searchStr = ""
---     , sortby = "title"
---     , sortdir = "asc"
---     }
-
-
 init : Sitemap -> ( Model, Cmd Msg )
 init route =
     urlUpdate route
         { route = route
         , ready = False
-        -- , posts = []
-        -- , post = Nothing
         , error = Nothing
+        , searchStr = ""
+        , sortby = "title"
+        , sortdir = "asc"
+        , item = Item.State.initialModel
+        , items = [{id = "1", title = "Hard", url = "http://coded.nu", createdAt = "2010-01-01"}]
         }
-
--- toList queriedObject =
---     queriedObject.store.linkConnection.edges
-
--- toMaybeNewItem queriedObject =
---     queriedObject.createLink.linkEdge.node
-
--- toMaybeDelItem queriedObject =
---     queriedObject.deleteLink.linkEdge.node
-
--- defaultItem item =
---     Item.Types.Model
---         (Maybe.withDefault "Missing id"        item.id)
---         (Maybe.withDefault "Missing title"     item.title)
---         (Maybe.withDefault "Missing url"       item.url)
---         (Maybe.withDefault "Missing createdAt" item.createdAt)
-
--- edgeToItem edge =
---     defaultItem edge.node
-
-
--- getQuery searchString sortString dirString =
---     GetLinks.queryLinks { queryParam = searchString, orderBy = sortString, orderDir = dirString}
---         |> Task.toMaybe
---         |> Task.perform (\_ -> NoOp) Get
-
-
--- postQuery item =
---     CreateLink.mutation { title = item.title, url = item.url }
---         |> Task.toMaybe
---         |> Task.perform (\_ -> NoOp) Add
-
-
--- delQuery str =
---     DeleteLink.deleteLink { id = str }
---         |> Task.toMaybe
---         |> Task.perform (\_ -> NoOp) Del
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg ({ route } as model) =
     case msg of
+        NoOp ->
+            ( model, Cmd.none)
+
         RouteTo route ->
             model ! [ Routes.navigateTo route ]
 
-        -- FetchError error ->
-        --     { model | error = Just (toString error) } ! []
+        UpdateSearch str ->
+            let
+                newModel =
+                    { model | searchStr = str }
+            in
+                ( newModel
+                , Cmd.none
+                -- , getQuery str model.sortby model.sortdir
+                )
 
-        -- FetchSuccess posts ->
-        --     urlUpdate route { model | ready = True, error = Nothing, posts = posts }
+        Sortby sortby ->
+            let
+                newModel =
+                    { model | sortby = sortby }
+            in
+            ( newModel
+            , Cmd.none
+            -- , getQuery model.searchStr sortby model.sortdir
+            )
 
+        Sortdir sortdir ->
+            let
+                newModel =
+                    { model | sortdir = sortdir }
+            in
+            ( newModel
+            , Cmd.none
+            -- , getQuery model.searchStr model.sortby sortdir
+            )
 
--- update : Msg -> Model -> ( Model, Cmd Msg )
--- update msg model =
---     case msg of
---         NoOp ->
---             ( model
---             , Cmd.none
---             )
+        ClearItem ->
+            let
+                newModel = model
+                -- newModel =
+                --     { model | item = Item.State.initialModel }
+            in
+            ( newModel
+            , Cmd.none
+            )
 
+        UpdateTitle str ->
+            let
+                item =
+                    model.item
 
---         Get maybeQuery ->
---             let
---                 newItems =
---                     case maybeQuery of
---                         Just query ->
---                             let
---                                 list =
---                                     toList query
---                             in
---                                 List.map edgeToItem list
+                updatedItem =
+                    { item | title = str }
 
---                         Nothing ->
---                             []
+                newModel =
+                    { model | item = updatedItem }
 
---                 newModel =
---                     { model | items = newItems }
---             in
---                 ( newModel
---                 , Cmd.none
---                 )
+            in
+                ( newModel
+                , Cmd.none
+                )
+
+        UpdateUrl str ->
+            let
+                item =
+                    model.item
+
+                updatedItem =
+                    { item | url = str }
+
+                newModel =
+                    { model | item = updatedItem }
+            in
+                ( newModel
+                , Cmd.none
+                )
+
+        Get maybeQuery ->
+            let
+                newItems =
+                    case maybeQuery of
+                        Just query ->
+                            let
+                                list =
+                                    toList query
+                            in
+                                List.map edgeToItem list
+
+                        Nothing ->
+                            []
+
+                newModel =
+                    { model | items = newItems }
+            in
+                ( newModel
+                , Cmd.none
+                )
 
 
 --         Add maybeQuery ->
@@ -156,16 +171,6 @@ update msg ({ route } as model) =
 --                 )
 
 
---         UpdateSearch str ->
---             let
---                 newModel =
---                     { model | searchStr = str }
---             in
---                 ( newModel
---                 , getQuery str model.sortby model.sortdir
---                 )
-
-
 --         TryAdd ->
 --             ( model
 --             , postQuery model.item
@@ -178,57 +183,6 @@ update msg ({ route } as model) =
 --             )
 
 
---         UpdateTitle str ->
---             let
---                 item =
---                     model.item
-
---                 updatedItem =
---                     { item | title = str }
-
---                 newModel =
---                     { model | item = updatedItem }
-
---             in
---                 ( newModel
---                 , Cmd.none
---                 )
-
-
---         UpdateUrl str ->
---             let
---                 item =
---                     model.item
-
---                 updatedItem =
---                     { item | url = str }
-
---                 newModel =
---                     { model | item = updatedItem }
---             in
---                 ( newModel
---                 , Cmd.none
---                 )
-
-
---         Sortby sortby ->
---             let
---                 newModel =
---                     { model | sortby = sortby }
---             in
---             ( newModel
---             , getQuery model.searchStr sortby model.sortdir
---             )
-
---         Sortdir sortdir ->
---             let
---                 newModel =
---                     { model | sortdir = sortdir }
---             in
---             ( newModel
---             , getQuery model.searchStr model.sortby sortdir
---             )
-
 --         SetItem item ->
 --             let
 --                 newModel =
@@ -238,15 +192,11 @@ update msg ({ route } as model) =
 --             , Cmd.none
 --             )
 
---         ClearItem ->
---             let
---                 newModel =
---                     { model | item = Item.State.initialModel }
---             in
---             ( newModel
---             , Cmd.none
---             )
+        -- FetchError error ->
+        --     { model | error = Just (toString error) } ! []
 
+        -- FetchSuccess posts ->
+        --     urlUpdate route { model | ready = True, error = Nothing, posts = posts }
 
 urlUpdate : Sitemap -> Model -> ( Model, Cmd Msg )
 urlUpdate route ({ ready } as m) =
@@ -255,6 +205,13 @@ urlUpdate route ({ ready } as m) =
             { m | route = route }
     in
         case route of
+            HomeR () ->
+                if ready then
+                    model ! []
+                else
+                    -- model ! [ fetchPosts ]
+                    model ! [ getQuery "" "title" "asc" ]
+
             -- PostsR () ->
             --     if ready then
             --         model ! []
@@ -269,3 +226,43 @@ urlUpdate route ({ ready } as m) =
 
             _ ->
                 model ! []
+
+
+
+toList queriedObject =
+    queriedObject.store.linkConnection.edges
+
+-- toMaybeNewItem queriedObject =
+--     queriedObject.createLink.linkEdge.node
+
+-- toMaybeDelItem queriedObject =
+--     queriedObject.deleteLink.linkEdge.node
+
+defaultItem item =
+    Item.Types.Model
+        (Maybe.withDefault "Missing id"        item.id)
+        (Maybe.withDefault "Missing title"     item.title)
+        (Maybe.withDefault "Missing url"       item.url)
+        (Maybe.withDefault "Missing createdAt" item.createdAt)
+
+edgeToItem edge =
+    defaultItem edge.node
+
+
+getQuery searchString sortString dirString =
+    GetLinks.queryLinks { queryParam = searchString, orderBy = sortString, orderDir = dirString}
+        |> Task.toMaybe
+        |> Task.perform (\_ -> NoOp) Get
+
+
+-- postQuery item =
+--     CreateLink.mutation { title = item.title, url = item.url }
+--         |> Task.toMaybe
+--         |> Task.perform (\_ -> NoOp) Add
+
+
+-- delQuery str =
+--     DeleteLink.deleteLink { id = str }
+--         |> Task.toMaybe
+--         |> Task.perform (\_ -> NoOp) Del
+

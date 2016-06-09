@@ -32,7 +32,7 @@ editItemModal item =
                   [ input
                       [ type' "text"
                       , id "newUrl"
-                      , onInput UpdateUrl
+                      -- , onInput UpdateUrl
                       , value item.url
                       ]
                       []
@@ -46,7 +46,7 @@ editItemModal item =
                           ++ "white-text"
                       )
                   , type' "button"
-                  , onClick (TryAdd)
+                  -- , onClick (TryAdd)
                   ]
                   [ strong [] [ text "Update" ] ]
               , a
