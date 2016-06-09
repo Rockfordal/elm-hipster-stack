@@ -42,8 +42,7 @@ update msg ({ route } as model) =
                     { model | searchStr = str }
             in
                 ( newModel
-                , Cmd.none
-                -- , getQuery str model.sortby model.sortdir
+                , getQuery str model.sortby model.sortdir
                 )
 
         Sortby sortby ->
@@ -52,8 +51,7 @@ update msg ({ route } as model) =
                     { model | sortby = sortby }
             in
             ( newModel
-            , Cmd.none
-            -- , getQuery model.searchStr sortby model.sortdir
+            , getQuery model.searchStr sortby model.sortdir
             )
 
         Sortdir sortdir ->
@@ -62,8 +60,7 @@ update msg ({ route } as model) =
                     { model | sortdir = sortdir }
             in
             ( newModel
-            , Cmd.none
-            -- , getQuery model.searchStr model.sortby sortdir
+            , getQuery model.searchStr model.sortby sortdir
             )
 
         ClearItem ->
@@ -122,81 +119,79 @@ update msg ({ route } as model) =
                             []
 
                 newModel =
-                    { model | items = newItems }
+                    { model | items = newItems
+                            , ready = True
+                    }
+
             in
                 ( newModel
                 , Cmd.none
                 )
 
 
---         Add maybeQuery ->
---             let
---                 newModel =
---                   case maybeQuery of
---                       Just query ->
---                           let
---                               maybenewItem =
---                                   toMaybeNewItem query
---                               newItem =
---                                   (defaultItem maybenewItem)
---                           in
---                               { model
---                                   | items = newItem :: model.items
---                                   , item = initialModel.item
---                               }
---                       Nothing ->
---                               model
---             in
---                 ( newModel
---                 , closeModal ()
---                 )
+        Add maybeQuery ->
+            let
+                newModel =
+                  case maybeQuery of
+                      Just query ->
+                          let
+                              maybenewItem =
+                                  toMaybeNewItem query
+                              newItem =
+                                  (defaultItem maybenewItem)
+                          in
+                              { model
+                                  | items = newItem :: model.items
+                                  , item = Item.State.initialModel
+                              }
+                      Nothing ->
+                              model
+            in
+                ( newModel
+                , closeModal ()
+                )
 
 
---         Del maybeQuery ->
---             let newModel =
---               case maybeQuery of
---                   Just query ->
---                           let
---                               maybedelItem = toMaybeDelItem query
---                               delItem = (defaultItem maybedelItem)
---                               id = delItem.id
---                               -- logger = log "del id" id
---                           in
---                               { model | items = List.filter (\t -> t.id /= id) model.items }
---                   Nothing ->
---                           model
---             in
---                 ( newModel
---                 , Cmd.none
---                 )
+        Del maybeQuery ->
+            let newModel =
+              case maybeQuery of
+                  Just query ->
+                          let
+                              maybedelItem = toMaybeDelItem query
+                              delItem = (defaultItem maybedelItem)
+                              id = delItem.id
+                              -- logger = log "del id" id
+                          in
+                              { model | items = List.filter (\t -> t.id /= id) model.items }
+                  Nothing ->
+                          model
+            in
+                ( newModel
+                , Cmd.none
+                )
 
 
---         TryAdd ->
---             ( model
---             , postQuery model.item
---             )
+        TryAdd ->
+            ( model
+            , postQuery model.item
+            )
 
 
---         TryDel str ->
---             ( model
---             , delQuery str
---             )
+        TryDel str ->
+            ( model
+            , delQuery str
+            )
 
 
---         SetItem item ->
---             let
---                 newModel =
---                     { model | item = item }
---             in
---             ( newModel
---             , Cmd.none
---             )
+        SetItem item ->
+            let
+                newModel =
+                    { model | item = item }
+            in
+            ( newModel
+            , Cmd.none
+            )
 
-        -- FetchError error ->
-        --     { model | error = Just (toString error) } ! []
-
-        -- FetchSuccess posts ->
-        --     urlUpdate route { model | ready = True, error = Nothing, posts = posts }
 
 urlUpdate : Sitemap -> Model -> ( Model, Cmd Msg )
 urlUpdate route ({ ready } as m) =
@@ -209,20 +204,7 @@ urlUpdate route ({ ready } as m) =
                 if ready then
                     model ! []
                 else
-                    -- model ! [ fetchPosts ]
                     model ! [ getQuery "" "title" "asc" ]
-
-            -- PostsR () ->
-            --     if ready then
-            --         model ! []
-            --     else
-            --         model ! [ fetchPosts ]
-
-            -- PostR id ->
-            --     if ready then
-            --         { model | post = Data.lookupPost id model.posts } ! []
-            --     else
-            --         model ! [ fetchPosts ]
 
             _ ->
                 model ! []
@@ -232,11 +214,11 @@ urlUpdate route ({ ready } as m) =
 toList queriedObject =
     queriedObject.store.linkConnection.edges
 
--- toMaybeNewItem queriedObject =
---     queriedObject.createLink.linkEdge.node
+toMaybeNewItem queriedObject =
+    queriedObject.createLink.linkEdge.node
 
--- toMaybeDelItem queriedObject =
---     queriedObject.deleteLink.linkEdge.node
+toMaybeDelItem queriedObject =
+    queriedObject.deleteLink.linkEdge.node
 
 defaultItem item =
     Item.Types.Model
@@ -255,14 +237,14 @@ getQuery searchString sortString dirString =
         |> Task.perform (\_ -> NoOp) Get
 
 
--- postQuery item =
---     CreateLink.mutation { title = item.title, url = item.url }
---         |> Task.toMaybe
---         |> Task.perform (\_ -> NoOp) Add
+postQuery item =
+    CreateLink.mutation { title = item.title, url = item.url }
+        |> Task.toMaybe
+        |> Task.perform (\_ -> NoOp) Add
 
 
--- delQuery str =
---     DeleteLink.deleteLink { id = str }
---         |> Task.toMaybe
---         |> Task.perform (\_ -> NoOp) Del
+delQuery str =
+    DeleteLink.deleteLink { id = str }
+        |> Task.toMaybe
+        |> Task.perform (\_ -> NoOp) Del
 

@@ -20,7 +20,7 @@ addItemModal item =
                   [ input
                       [ type' "text"
                       , id "newTitle"
-                      -- , onInput UpdateTitle
+                      , onInput UpdateTitle
                       , value item.title
                       , autofocus True
                       ]
@@ -32,7 +32,7 @@ addItemModal item =
                   [ input
                       [ type' "text"
                       , id "newUrl"
-                      -- , onInput UpdateUrl
+                      , onInput UpdateUrl
                       , value item.url
                       ]
                       []
@@ -46,7 +46,7 @@ addItemModal item =
                           ++ "white-text"
                       )
                   , type' "button"
-                  -- , onClick (TryAdd)
+                  , onClick (TryAdd)
                   ]
                   [ strong [] [ text "Add" ] ]
               , a

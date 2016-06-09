@@ -29,11 +29,11 @@ type Msg
     | UpdateTitle String
     | UpdateUrl String
     | Get (Maybe QueryLinksResult)
---     | Add (Maybe MutationResult)
---     | Del (Maybe DeleteLinkResult)
---     | TryAdd
---     | TryDel String
---     | SetItem Item.Types.Model
+    | Add (Maybe MutationResult)
+    | Del (Maybe DeleteLinkResult)
+    | TryAdd
+    | TryDel String
+    | SetItem Item.Types.Model
 
 
 type alias Edge =
