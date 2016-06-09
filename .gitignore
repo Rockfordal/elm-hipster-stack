@@ -22,6 +22,7 @@ erl_crash.dump
 
 #ELM
 /web/static/js/elm/elm-stuff
+/web/static/js/elm/elm.js
 
 # Custom added
 /node_modules
