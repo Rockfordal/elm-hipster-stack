@@ -6,7 +6,7 @@ import Item.Types
 import GraphQL.GetLinks   as GetLinks   exposing (QueryLinksResult)
 import GraphQL.CreateLink as CreateLink exposing (MutationResult)
 import GraphQL.DeleteLink as DeleteLink exposing (DeleteLinkResult)
-import Ports exposing (closeModal)
+import Ports exposing (closeModal, hejja)
 import Task
 import Debug exposing (log)
 import Navigation exposing (Location)
@@ -202,9 +202,10 @@ urlUpdate route ({ ready } as m) =
         case route of
             HomeR () ->
                 if ready then
-                    model ! []
+                    model ! [ hejja () ]
                 else
-                    model ! [ getQuery "" "title" "asc" ]
+                    model ! [ getQuery "" "title" "asc"
+                            , hejja () ]
 
             _ ->
                 model ! []
@@ -247,4 +248,3 @@ delQuery str =
     DeleteLink.deleteLink { id = str }
         |> Task.toMaybe
         |> Task.perform (\_ -> NoOp) Del
-

@@ -11,11 +11,16 @@ App.ports.closeModal.subscribe(function() {
   $('#modal2').closeModal();
 });
 
+App.ports.hejja.subscribe(function() {
+  fixhome();
+});
+
 // window.lol = $('.modal-trigger');
 // window.asdf = $('#modal1');
 
 // Ugly hack, someone please improve :)
-setTimeout(() => {
+let fixhome = () => {
+   setTimeout(() => {
     $('.modal-trigger').leanModal();
 
     $('.dropdown-button').dropdown({
@@ -27,5 +32,6 @@ setTimeout(() => {
         belowOrigin: false, // Displays dropdown below the button
         alignment: 'left' // Displays dropdown with edge aligned to the left of button
     });
-
-}, 500);
+   }, 500);
+    console.log("nu..");
+}
