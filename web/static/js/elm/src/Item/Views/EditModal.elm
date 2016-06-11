@@ -46,7 +46,7 @@ editItemModal item =
                           ++ "white-text"
                       )
                   , type' "button"
-                  , onClick (TryAdd)
+                  , onClick (TryUpdate)
                   ]
                   [ strong [] [ text "Update" ] ]
               , a

@@ -8,35 +8,100 @@ defmodule App.Mutations.Link do
   @notnullstring %{type: %NonNull{ofType: %String{}}}
   require Logger
 
+  def logga msg do
+    msg
+    |> inspect
+    |> Logger.debug
+  end
+
   def create do
     Mutation.new(%{
-      name: "CreateLink",
+          name: "CreateLink",
+          input_fields: App.Type.Link.get.fields,
+          # input_fields: %{
+          #   title: @notnullstring,
+          #   url:   @notnullstring
+          # },
+          output_fields: %{
+            linkEdge: %{
+              type: App.Type.LinkConnection.get[:edge_type],
+              resolve: fn (obj, _args, _info) ->
+                obj |> logga
+                %{
+                  node: App.Query.Link.get_from_id(first(obj[:generated_keys])),
+                  cursor: first(obj[:generated_keys])
+                 }
+              end
+            },
+            store: App.Utils.getstore
+          },
+          mutate_and_get_payload: fn(input, _info) ->
+            Query.table("links")
+            |> Query.insert(
+              %{
+                title: input[:title],
+                url:   input[:url],
+                timestamp: TimeHelper.currentTime
+              })
+            |> DB.run
+            |> DB.handle_graphql_resp
+          end
+      })
+  end
+
+  def update do
+    Mutation.new(%{
+      name: "UpdateLink",
+      # input_fields: App.Type.Link.get.fields,
       input_fields: %{
-        title: @notnullstring,
-        url:   @notnullstring
-      },
+          id:    @notnullstring,
+          title: @notnullstring,
+          url:   @notnullstring
+        },
       output_fields: %{
         linkEdge: %{
           type: App.Type.LinkConnection.get[:edge_type],
           resolve: fn (obj, _args, _info) ->
+            # obj |> logga
             %{
-              node: App.Query.Link.get_from_id(first(obj[:generated_keys])),
-              cursor: first(obj[:generated_keys])
+              node:
+              %{
+                id: obj[:id],
+                title: obj[:title],
+                url: obj[:url],
+                timestamp: TimeHelper.currentTime
+              },
+              cursor: %{}
+              # node: App.Query.Link.get_from_id(first(obj[:generated_keys])),
+              # cursor: first(obj[:generated_keys])
             }
           end
         },
         store: App.Utils.getstore
       },
       mutate_and_get_payload: fn(input, _info) ->
-        Query.table("links")
-          |> Query.insert(
+          replaced = Query.table("links")
+          |> Query.get(input[:id])
+          |> Query.update(
             %{
               title: input[:title],
-              url: input[:url],
+              url:   input[:url],
               timestamp: TimeHelper.currentTime
             })
           |> DB.run
-          |> DB.handle_graphql_resp
+          |> Map.fetch(:data)
+          |> Tuple.to_list
+          |> List.last
+          |> Map.fetch("replaced")
+          |> Tuple.to_list
+          |> List.last
+          # |> logga
+          if replaced == 1 do
+            input
+          else
+            %{}
+          end
+          # |> DB.handle_graphql_resp
       end
     })
   end
@@ -51,8 +116,7 @@ defmodule App.Mutations.Link do
             linkEdge: %{
               type: App.Type.LinkConnection.get[:edge_type],
               resolve: fn (obj, args, _info) ->
-                Logger.debug "obj"
-                obj |> inspect |> Logger.debug
+                # obj |> inspect |> Logger.debug
                 %{
                   node: %{
                     timestamp: "2016-01-02",

@@ -1,0 +1,12 @@
+mutation updateLink($id: String!, $title: String!, $url: String!) {
+  updateLink(input: {clientMutationId: "1", id: $id, title: $title, url: $url}) {
+    linkEdge {
+      node {
+        id
+        title
+        url
+        createdAt
+      }
+    }
+  }
+}

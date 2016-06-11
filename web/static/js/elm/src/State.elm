@@ -6,6 +6,7 @@ import Item.Types
 import GraphQL.GetLinks   as GetLinks   exposing (QueryLinksResult)
 import GraphQL.CreateLink as CreateLink exposing (MutationResult)
 import GraphQL.DeleteLink as DeleteLink exposing (DeleteLinkResult)
+import GraphQL.UpdateLink as UpdateLink exposing (UpdateLinkResult)
 import Ports exposing (closeModal, hejja)
 import Task
 import Debug exposing (log)
@@ -171,6 +172,26 @@ update msg ({ route } as model) =
                 )
 
 
+        Update maybeQuery ->
+            let newModel =
+              case maybeQuery of
+                  Just query ->
+                          let
+                              maybeupdatedItem = toMaybeUpdatedItem query
+                              updatedItem = (defaultItem maybeupdatedItem)
+                              updateItem t =
+                                if t.id == updatedItem.id then { t | title = updatedItem.title
+                                                                   , url = updatedItem.url } else t
+                          in
+                              { model | items = List.map updateItem model.items }
+                  Nothing ->
+                          model
+            in
+                ( newModel
+                , closeModal ()
+                )
+
+
         TryAdd ->
             ( model
             , postQuery model.item
@@ -181,6 +202,15 @@ update msg ({ route } as model) =
             ( model
             , delQuery str
             )
+
+
+        TryUpdate ->
+            let
+                item = model.item
+            in
+              ( model
+              , updateQuery item.id item.title item.url
+              )
 
 
         SetItem item ->
@@ -221,6 +251,9 @@ toMaybeNewItem queriedObject =
 toMaybeDelItem queriedObject =
     queriedObject.deleteLink.linkEdge.node
 
+toMaybeUpdatedItem queriedObject =
+    queriedObject.updateLink.linkEdge.node
+
 defaultItem item =
     Item.Types.Model
         (Maybe.withDefault "Missing id"        item.id)
@@ -236,6 +269,11 @@ getQuery searchString sortString dirString =
     GetLinks.queryLinks { queryParam = searchString, orderBy = sortString, orderDir = dirString}
         |> Task.toMaybe
         |> Task.perform (\_ -> NoOp) Get
+
+updateQuery idString titleString urlString =
+    UpdateLink.updateLink { id = idString, title = titleString, url = urlString }
+        |> Task.toMaybe
+        |> Task.perform (\_ -> NoOp) Update -- (\_ -> NoOp)
 
 
 postQuery item =

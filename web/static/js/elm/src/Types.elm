@@ -4,6 +4,7 @@ import Item.Types
 import GraphQL.GetLinks   as GetLinks   exposing (QueryLinksResult)
 import GraphQL.CreateLink as CreateLink exposing (MutationResult)
 import GraphQL.DeleteLink as DeleteLink exposing (DeleteLinkResult)
+import GraphQL.UpdateLink as UpdateLink exposing (UpdateLinkResult)
 import Routes exposing (Sitemap(..))
 
 
@@ -31,8 +32,10 @@ type Msg
     | Get (Maybe QueryLinksResult)
     | Add (Maybe MutationResult)
     | Del (Maybe DeleteLinkResult)
+    | Update (Maybe UpdateLinkResult)
     | TryAdd
     | TryDel String
+    | TryUpdate
     | SetItem Item.Types.Model
 
 

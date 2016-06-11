@@ -7,7 +7,8 @@ defmodule App.Mutation do
       name: "Mutation",
       fields: %{
         createLink: App.Mutations.Link.create,
-        deleteLink: App.Mutations.Link.delete
+        deleteLink: App.Mutations.Link.delete,
+        updateLink: App.Mutations.Link.update
       }
     }
   end
